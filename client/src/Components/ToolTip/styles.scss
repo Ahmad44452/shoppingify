@@ -1,0 +1,29 @@
+.tooltip {
+  display: none;
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translate(100%, -50%);
+  background-color: #454545;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.8rem;
+  text-transform: lowercase;
+  color: #fff;
+  pointer-events: none;
+  border: none;
+  border-radius: 3px;
+  z-index: 10;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translate(-100%, -50%);
+    width: 10px;
+    height: 10px;
+    background-color: #454545;
+    clip-path: polygon(45% 50%, 100% 100%, 100% 0);
+    border: none;
+  }
+}
