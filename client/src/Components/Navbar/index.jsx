@@ -55,6 +55,7 @@ const Navbar = ({ children }) => {
         </div>
         <div className="navbar__cart">
           <AiOutlineShoppingCart />
+          <p className="navbar__cart--count">3</p>
         </div>
       </nav>
 

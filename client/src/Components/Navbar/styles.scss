@@ -67,6 +67,7 @@
 
   &__cart {
     line-height: 1;
+    position: relative;
     svg {
       color: #fff;
       width: 1.5rem;
@@ -75,6 +76,17 @@
       border-radius: 999px;
       background-color: #f9a109;
       padding: 0.6rem 0.6rem 0.6rem 0.5rem;
+    }
+
+    &--count {
+      position: absolute;
+      top: 0;
+      right: 0;
+      transform: translate(30%, -35%);
+      border-radius: 2px;
+      background-color: #eb5757;
+      color: #fff;
+      padding: 0.2rem 0.4rem;
     }
   }
 }
