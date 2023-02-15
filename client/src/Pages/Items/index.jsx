@@ -1,5 +1,15 @@
+import Menu from "./Menu";
+import ShoppingList from "./ShoppingList";
+
+import "./styles.scss";
+
 const Items = () => {
-  return <h1>ITEMS SECTION</h1>;
+  return (
+    <div className="items__container">
+      <Menu />
+      <ShoppingList />
+    </div>
+  );
 };
 
 export default Items;

@@ -36,9 +36,9 @@
 
     svg {
       box-sizing: content-box;
-      width: 1.5rem;
-      height: 1.5rem;
-      padding: 0.7rem 0;
+      width: 2.5rem;
+      height: 2.5rem;
+      padding: 1rem 0;
       line-height: 1;
     }
 
@@ -70,8 +70,8 @@
     position: relative;
     svg {
       color: #fff;
-      width: 1.5rem;
-      height: 1.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
       box-sizing: content-box;
       border-radius: 999px;
       background-color: #f9a109;
@@ -82,12 +82,12 @@
       position: absolute;
       top: 0;
       right: 0;
-      font-size: 0.8rem;
+      font-size: 1.2rem;
       transform: translate(30%, -35%);
       border-radius: 2px;
       background-color: #eb5757;
       color: #fff;
-      padding: 0.3rem 0.5rem;
+      padding: 0.4rem 0.6rem;
     }
   }
 }
