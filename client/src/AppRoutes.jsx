@@ -1,19 +1,21 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Navbar from "./Components/Navbar";
+
 import Items from "./Pages/Items";
 import History from "./Pages/History";
 import Statistics from "./Pages/Statistics";
 
+import AppLayout from "./Layouts/AppLayout";
+
 const AppRoutes = () => {
   return (
     <BrowserRouter>
-      <Navbar>
+      <AppLayout>
         <Routes>
           <Route path="/" element={<Items />} />
           <Route path="/history" element={<History />} />
           <Route path="/statistics" element={<Statistics />} />
         </Routes>
-      </Navbar>
+      </AppLayout>
     </BrowserRouter>
   );
 };
