@@ -1,8 +1,8 @@
 import "./styles.scss";
-import ShoppingList from "../ShoppingList";
+import Cart from "../Cart";
 
 const Sidebar = () => {
-  return <ShoppingList />;
+  return <Cart />;
 };
 
 export default Sidebar;
