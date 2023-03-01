@@ -1,27 +1,20 @@
 import "./styles.scss";
+import { useEffect } from "react";
 import bottleImg from "../../assets/source.svg";
 import { HiPencil } from "react-icons/hi";
-
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPendingCart } from "../../store/asyncThunks/cartThunk";
 import CategoryItems from "./CategoryItems";
 
 const Cart = () => {
-  const shoppingListItems = [
-    {
-      category: "Fruit and vegetables",
-      items: [
-        { name: "Acocado", amount: 1 },
-        { name: "Pre-cooked corn 450g", amount: 1 },
-      ],
-    },
-    {
-      category: "Meat and Fish",
-      items: [
-        { name: "Chicken 1kg", amount: 1 },
-        { name: "Pork fillets 450g", amount: 1 },
-        { name: "Salmon 1kg", amount: 1 },
-      ],
-    },
-  ];
+  const dispatch = useDispatch();
+  const cartData = useSelector((state) => state.cartSlice.cart);
+
+  useEffect(() => {
+    if (cartData === null) {
+      dispatch(fetchPendingCart());
+    }
+  }, []);
 
   return (
     <div className="cart">
@@ -45,9 +38,10 @@ const Cart = () => {
         </div>
 
         <div className="cart__list--items">
-          {shoppingListItems.map((categoryObj) => (
-            <CategoryItems categoryObj={categoryObj} />
-          ))}
+          {cartData &&
+            cartData.categories.map((category) => (
+              <CategoryItems key={category._id} category={category} />
+            ))}
         </div>
       </div>
       <div className="cart__search">

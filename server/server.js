@@ -3,7 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-
+const cors = require('cors');
 
 
 ///////////// MONGO DB CONNECTION
@@ -21,12 +21,21 @@ mongoose.connect(mongoUri, {
 
 
 //////////// APPLY MIDDLEWARES
+var corsOptions = {
+  origin: process.env.FRONTEND_URI,
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 
 ////////// API ROUTES
-// const userApi = require("./routes/api/userApi");
-// app.use("/api/user", userApi);
+const itemApi = require("./routes/api/itemApi");
+app.use("/api/item", itemApi);
+const categoryApi = require("./routes/api/categoryApi");
+app.use("/api/category", categoryApi);
+const cartApi = require("./routes/api/cartApi");
+app.use("/api/cart", cartApi);
 ///////////////////////////////////////
 
 app.get('/test', (req, res) => {

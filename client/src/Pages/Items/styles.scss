@@ -1,5 +1,7 @@
 .items__container {
   display: flex;
-  background-color: purple;
+  flex-direction: column;
   height: 100vh;
+  background-color: #fafafe;
+  padding: 3rem 5rem 0 5rem;
 }

@@ -6,6 +6,7 @@ const itemSchema = new mongoose.Schema({
     type: String,
     required: [true, "Item name is required!"],
     trim: true,
+    unique: [true, "Item already exists!"]
   },
   note: {
     type: String,
@@ -30,4 +31,4 @@ const itemSchema = new mongoose.Schema({
 
 
 const ItemModel = mongoose.model("Item", itemSchema);
-module.exports = { ItemModel };
+module.exports = { ItemModel, itemSchema };

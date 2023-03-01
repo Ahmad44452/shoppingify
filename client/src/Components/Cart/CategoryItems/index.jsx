@@ -1,11 +1,11 @@
 import SingleItem from "./SingleItem";
 
-const CategoryItems = ({ categoryObj }) => {
+const CategoryItems = ({ category }) => {
   return (
     <div className="itemset">
-      <h2 className="itemset__heading">{categoryObj.category}</h2>
-      {categoryObj.items.map((item) => (
-        <SingleItem item={item} />
+      <h2 className="itemset__heading">{category.name}</h2>
+      {category.items.map((item) => (
+        <SingleItem key={item._id} item={item} />
       ))}
     </div>
   );
