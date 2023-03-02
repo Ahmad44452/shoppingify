@@ -7,7 +7,13 @@ const MenuCategory = ({ category }) => {
       <h1 className="menuCategory__name">{category.name}</h1>
       <div className="menuCategory__items">
         {category.items &&
-          category.items.map((item) => <MenuItem key={item._id} item={item} />)}
+          category.items.map((item) => (
+            <MenuItem
+              key={item._id}
+              item={item}
+              category={{ _id: category._id, name: category.name }}
+            />
+          ))}
       </div>
     </div>
   );
