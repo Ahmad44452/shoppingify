@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchPendingCart } from "../asyncThunks/cartThunk";
+import { fetchPendingCart, saveCart } from "../asyncThunks/cartThunk";
 
 const initialState = {
   cart: null,
@@ -15,10 +15,33 @@ export const cartSlice = createSlice({
     setCart: (state, action) => {
       state.cart = action.payload
     },
+    setCartName: (state, action) => {
+      state.cart.name = action.payload
+    },
+    setCartStatus: (state, action) => {
+      state.cart.status = action.payload
+    },
+    toggleCartItemCompletion: (state, action) => {
+      const { item, category } = action.payload;
+
+      // loop through categories
+      state.cart.categories.forEach((cartCategory, cartIndex) => {
+        // if category of specified item is found
+        if (cartCategory._id === category._id) {
+          // loop through items in that category
+          cartCategory.items.forEach((cartItem, itemIndex) => {
+            // if item is found toggle its completion state
+            if (cartItem._id === item._id) {
+              cartItem.isChecked = !cartItem.isChecked
+            }
+          })
+
+        }
+
+      })
+    },
     modifyAmountOrAddToCart: (state, action) => {
       const { item, category, toSub } = action.payload;
-
-
 
       if (state.cart === 'Empty') {
         // add to empty cart functionality
@@ -141,29 +164,73 @@ export const cartSlice = createSlice({
     builder.addCase(fetchPendingCart.pending, (state, action) => {
       state.cartError = null
     })
-    // SET DATA IF FETCH REQUEST IF FULFILLED
+    // SET DATA IF FETCH REQUEST IS FULFILLED
     builder.addCase(fetchPendingCart.fulfilled, (state, action) => {
       state.cart = action.payload
-      const itemIdsArray = []
-      // loop through categories
-      for (let cartCategory of action.payload.categories) {
 
-        // loop through items in that category
-        for (let cartItem of cartCategory.items) {
-          itemIdsArray.push(cartItem._id)
-          // state.addedItemIds = [...state.addedItemIds, cartItem._id]
+      if (action.payload !== "Empty") {
+        const itemIdsArray = []
+        // loop through categories
+        for (let cartCategory of action.payload.categories) {
+
+          // loop through items in that category
+          for (let cartItem of cartCategory.items) {
+            itemIdsArray.push(cartItem._id)
+            // state.addedItemIds = [...state.addedItemIds, cartItem._id]
+          }
+
         }
 
+        state.addedItemIds = [...new Set(itemIdsArray)];
       }
 
-      state.addedItemIds = [...new Set(itemIdsArray)];
+
     })
     // SET ERROR IF FETCH REQUEST IS REJECTED
     builder.addCase(fetchPendingCart.rejected, (state, action) => {
       state.cartError = action.error.message
     })
+
+    /**************************************************************************** */
+    // SET ERROR TO NULL WHEN REQUEST TO SAVE CART IS MADE
+    builder.addCase(saveCart.pending, (state, action) => {
+      state.cartError = null
+    })
+
+    // SET DATA IF CART SAVE IS FULFILLED
+    builder.addCase(saveCart.fulfilled, (state, action) => {
+
+
+      if (action.payload) {
+        state.cart = action.payload
+        if (action.payload === "Empty") {
+          state.cart = action.payload
+          state.addedItemIds = []
+        } else {
+          const itemIdsArray = []
+          // loop through categories
+          for (let cartCategory of action.payload.categories) {
+
+            // loop through items in that category
+            for (let cartItem of cartCategory.items) {
+              itemIdsArray.push(cartItem._id)
+              // state.addedItemIds = [...state.addedItemIds, cartItem._id]
+            }
+
+          }
+
+          state.addedItemIds = [...new Set(itemIdsArray)];
+        }
+      }
+
+
+    })
+    // SET ERROR IF CART SAVE IS REJECTED
+    builder.addCase(saveCart.rejected, (state, action) => {
+      state.cartError = action.error.message
+    })
   }
 });
 
-export const { setCart, modifyAmountOrAddToCart, deleteItemFromCart } = cartSlice.actions;
+export const { setCart, modifyAmountOrAddToCart, deleteItemFromCart, setCartName, setCartStatus, toggleCartItemCompletion } = cartSlice.actions;
 export default cartSlice.reducer;

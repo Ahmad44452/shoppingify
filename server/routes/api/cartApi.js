@@ -3,25 +3,47 @@ let router = express.Router();
 
 
 ///////////// GET USER MODEL
-const { ItemModel } = require('../../models/itemModel')
 const { CartModel } = require('../../models/cartModel')
 
-router.route('/create').post(async (req, res) => {
+router.route('/save').post(async (req, res) => {
   try {
+    let cart;
+    // if user is updating a cart, the request will contain its id
+    // so instead of creating a new one, the current cart will be updated
+    if (req.body._id) {
+      cart = await CartModel.findById(req.body._id);
+      // send error if cart does not exist
+      if (!cart)
+        return res.status(400).json({ message: "Cart does not exist" })
 
-    const latestCart = await CartModel.findOne({}, {}, { sort: { 'date': -1 } })
+      // update cart with new name and new items
+      cart.name = req.body.name;
+      cart.items = req.body.items;
+      cart.status = req.body.status;
+    } else {
+      pendingCartCheck = await CartModel.findOne({}, {}, { sort: { '_id': -1 } });
 
-    if (latestCart && latestCart.status === 'pending')
-      return res.status(400).json({ message: "A pending cart already exists!" })
+      if (pendingCartCheck && pendingCartCheck.status === 'pending')
+        return res.status(400).json({ message: "A pending cart already exists!" });
 
-    const cart = new CartModel({
-      name: req.body.name,
-      items: req.body.items,
-    })
+      cart = new CartModel({
+        name: req.body.name,
+        items: req.body.items,
+      })
 
-    const doc = await cart.save();
+    }
+    let doc = await cart.save();
 
-    return res.status(200).json(doc);
+    if (doc.status === 'completed' || doc.status === 'cancelled')
+      return res.status(200).json("Empty");
+
+    await doc.populate('items.item');
+    await doc.populate('items.item.category');
+    doc = JSON.parse(JSON.stringify(doc));
+
+    return res.status(200).json(formatCart(doc));
+
+
 
   } catch (error) {
 
@@ -34,16 +56,16 @@ router.route('/create').post(async (req, res) => {
 
 router.route('/lastpending').get(async (req, res) => {
   try {
-    let latestCart = await CartModel.findOne({}, {}, { sort: { 'date': -1 } }).populate('items.item')
-    await latestCart.populate('items.item.category');
+    let latestCart = await CartModel.findOne({}, {}, { sort: { '_id': -1 } })
 
-
+    // if there is no pending cart, send empty
     if (!latestCart || latestCart.status !== 'pending')
       return res.status(200).json("Empty")
 
+    await latestCart.populate('items.item');
+    await latestCart.populate('items.item.category');
+
     latestCart = JSON.parse(JSON.stringify(latestCart))
-
-
     return res.status(200).json(formatCart(latestCart))
 
   } catch (error) {

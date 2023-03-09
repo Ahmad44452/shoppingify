@@ -95,16 +95,29 @@
     }
   }
 
-  &__search {
+  &__bottom {
     background-color: #fff;
     padding: 2rem;
     width: 100%;
+  }
 
-    &--container {
-      display: flex;
-      border: 2px solid #f9a109;
-      border-radius: 12px;
-      overflow: hidden;
+  &__save {
+    display: flex;
+    border: 2px solid #f9a109;
+    border-radius: 12px;
+    overflow: hidden;
+
+    &--disabled {
+      border: 2px solid #c1c1c4;
+
+      input {
+        pointer-events: none;
+      }
+
+      button {
+        pointer-events: none;
+        background-color: #c1c1c4;
+      }
     }
 
     &--input {
@@ -129,6 +142,31 @@
       font-size: 1.6rem;
       padding: 2rem;
       border-radius: 12px 0 0 12px;
+      cursor: pointer;
+    }
+  }
+
+  &__options {
+    text-align: center;
+
+    &--button {
+      cursor: pointer;
+      border: none;
+      font-weight: 700;
+      font-size: 1.6rem;
+    }
+
+    &--cancel {
+      background-color: transparent;
+      color: #34333a;
+    }
+
+    &--complete {
+      background-color: #56ccf2;
+      border-radius: 12px;
+      padding: 2rem;
+      color: #ffffff;
+      margin-left: 1.5rem;
     }
   }
 }

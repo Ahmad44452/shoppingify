@@ -3,10 +3,13 @@ import logo from "../../assets/logo.svg";
 import { AiOutlineShoppingCart, AiOutlineUnorderedList } from "react-icons/ai";
 import { BsArrowCounterclockwise } from "react-icons/bs";
 import { BiBarChartSquare } from "react-icons/bi";
+import { useSelector } from "react-redux";
 import "./styles.scss";
 import ToolTip from "../ToolTip/ToolTip";
 
 const Navbar = () => {
+  const noOfItems = useSelector((state) => state.cartSlice.addedItemIds.length);
+
   return (
     <nav className="navbar">
       <div className="navbar__logo">
@@ -54,7 +57,7 @@ const Navbar = () => {
       </div>
       <div className="navbar__cart">
         <AiOutlineShoppingCart />
-        <p className="navbar__cart--count">3</p>
+        <p className="navbar__cart--count">{noOfItems || 0}</p>
       </div>
     </nav>
   );

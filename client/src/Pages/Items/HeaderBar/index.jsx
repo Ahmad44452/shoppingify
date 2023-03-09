@@ -2,7 +2,7 @@ import "./styles.scss";
 
 import { GrSearch } from "react-icons/gr";
 
-const HeaderBar = () => {
+const HeaderBar = ({ setMenuSearchText }) => {
   return (
     <div className="headerbar">
       <h1 className="headerbar__heading">
@@ -11,7 +11,11 @@ const HeaderBar = () => {
       </h1>
       <div className="headerbar__search">
         <GrSearch />
-        <input type="text" placeholder="search item" />
+        <input
+          type="text"
+          placeholder="search item"
+          onChange={(e) => setMenuSearchText(e.currentTarget.value)}
+        />
       </div>
     </div>
   );

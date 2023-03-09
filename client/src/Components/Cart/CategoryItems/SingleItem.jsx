@@ -6,11 +6,12 @@ import { useDispatch } from "react-redux";
 import {
   modifyAmountOrAddToCart,
   deleteItemFromCart,
+  toggleCartItemCompletion,
 } from "../../../store/slices/cartSlice";
 
 const SingleItem = ({ item, isCartEditing, category }) => {
+  // console.log(item);
   const [isAmountChanging, setAmountChanging] = useState(false);
-  const [isCompleted, setCompleted] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -27,11 +28,13 @@ const SingleItem = ({ item, isCartEditing, category }) => {
           isCartEditing ? null : (
             <div
               className="itemset__item--checkbox"
-              onClick={() => setCompleted((prev) => !prev)}
+              onClick={() =>
+                dispatch(toggleCartItemCompletion({ item, category }))
+              }
             >
               {
                 /* if an item has been checked fill the checkbox */
-                isCompleted ? (
+                item.isChecked ? (
                   <span className="itemset__item--checkbox-active">&nbsp;</span>
                 ) : null
               }
@@ -42,7 +45,7 @@ const SingleItem = ({ item, isCartEditing, category }) => {
         {/* if item has been checked, add relevant class */}
         <span
           className={`itemset__item--name ${
-            isCompleted ? "itemset__item--name-completed" : ""
+            item.isChecked ? "itemset__item--name-completed" : ""
           }`}
         >
           {item.name}
