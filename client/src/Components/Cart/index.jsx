@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import "./styles.scss";
-
 import bottleImg from "../../assets/source.svg";
 
 import { fetchPendingCart, saveCart } from "../../store/asyncThunks/cartThunk";
@@ -13,12 +12,16 @@ import { setCartName, setCartStatus } from "../../store/slices/cartSlice";
 import CategoryItems from "./CategoryItems";
 import emptyCartImg from "../../assets/womanWithEmptyTrolly.svg";
 
+import CancelPopup from "./CancelPopup";
+import CompletePopup from "./CompletePopup";
+
 const Cart = () => {
   const dispatch = useDispatch();
   const cartData = useSelector((state) => state.cartSlice.cart);
 
-  // set cart editing to true if cart does not exist already
   const [isCartEditing, setCartEditing] = useState(false);
+  const [isCancelPopupVisible, setIsCancelPopuplVisible] = useState(false);
+  const [isCompletePopupVisible, setIsCompletePopupVisible] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -34,14 +37,31 @@ const Cart = () => {
     },
   });
 
-  const cancelCart = (e) => {
+  const checkIfAllItemsAreChecked = (e) => {
     e.preventDefault();
-    dispatch(setCartStatus("cancelled"));
-    dispatch(saveCart());
+    let isListCompleted = true;
+
+    // loop through all categories
+    for (let cartCategory of cartData.categories) {
+      // loop through all items in that category
+      for (let cartItem of cartCategory.items) {
+        // if an item in unchecked, set the respective variable and break out of the loop
+        if (cartItem.isChecked === false) {
+          isListCompleted = false;
+          break;
+        }
+      }
+
+      if (!isListCompleted) break;
+    }
+
+    // if all items are checked, save the list
+    if (isListCompleted) completeCart();
+    // otherwise display the popup
+    else setIsCompletePopupVisible(true);
   };
 
-  const completeCart = (e) => {
-    e.preventDefault();
+  const completeCart = () => {
     dispatch(setCartStatus("completed"));
     dispatch(saveCart());
   };
@@ -154,15 +174,31 @@ const Cart = () => {
               </form>
             ) : (
               <div className="cart__options">
+                {isCancelPopupVisible && (
+                  <CancelPopup
+                    setIsCancelPopuplVisible={setIsCancelPopuplVisible}
+                  />
+                )}
+
+                {isCompletePopupVisible && (
+                  <CompletePopup
+                    setIsCompletePopupVisible={setIsCompletePopupVisible}
+                    completeCart={completeCart}
+                  />
+                )}
+
                 <button
                   className="cart__options--button cart__options--cancel"
-                  onClick={cancelCart}
+                  onClick={() => setIsCancelPopuplVisible(true)}
+                  // onClick={cancelCart}
                 >
                   cancel
                 </button>
                 <button
                   className="cart__options--button cart__options--complete"
-                  onClick={completeCart}
+                  onClick={checkIfAllItemsAreChecked}
+                  // onClick={() => setIsCompletePopuplVisible(true)}
+                  // onClick={completeCart}
                 >
                   Complete
                 </button>
